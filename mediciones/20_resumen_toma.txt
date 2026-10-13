@@ -1,0 +1,12 @@
+TOMA DE DATOS  (hora de Bogota, UTC-5)   periodo de muestreo: 15 s
+  inicio : 2026-10-13 00:35:20
+  fin    : 2026-10-13 00:59:51
+  ventana: 0.41 h = 0.02 dias
+
+nodo       protocolo    puntos esperados  completitud  huecos    s sin datos
+nodo-amqp  amqp             87        98       88.78%       1            195
+nodo-coap  coap             97        97      100.00%       0              0
+nodo-mqtt  mqtt             97        97      100.00%       0              0
+
+HUECOS (> 30 s entre dos puntos seguidos): 1
+  nodo-amqp  2026-10-13 00:50:34 -> 00:53:49  (195 s)

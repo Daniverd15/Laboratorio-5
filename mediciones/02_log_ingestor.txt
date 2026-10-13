@@ -1,0 +1,14 @@
+2026-10-13T05:40:19Z [RX-MQTT] nodo-mqtt seq=12 T=19.65 H=90.6 L=0.9 -> InfluxDB 204
+2026-10-13T05:40:21Z [RX-COAP] nodo-coap seq=12 T=19.3 H=88.1 L=0.5 -> InfluxDB 204
+2026-10-13T05:40:34Z [RX-AMQP] nodo-amqp seq=13 T=20.65 H=89.8 L=5.4 -> InfluxDB 204
+2026-10-13T05:40:34Z [RX-MQTT] nodo-mqtt seq=13 T=19.76 H=89.2 L=5.7 -> InfluxDB 204
+2026-10-13T05:40:36Z [RX-COAP] nodo-coap seq=13 T=19.48 H=88.2 L=5.9 -> InfluxDB 204
+2026-10-13T05:40:49Z [RX-AMQP] nodo-amqp seq=14 T=20.68 H=88.5 L=1.0 -> InfluxDB 204
+2026-10-13T05:40:49Z [RX-MQTT] nodo-mqtt seq=14 T=19.58 H=91.5 L=1.8 -> InfluxDB 204
+2026-10-13T05:40:51Z [RX-COAP] nodo-coap seq=14 T=19.3 H=88.0 L=0.7 -> InfluxDB 204
+2026-10-13T05:41:04Z [RX-AMQP] nodo-amqp seq=15 T=20.54 H=89.5 L=2.5 -> InfluxDB 204
+2026-10-13T05:41:04Z [RX-MQTT] nodo-mqtt seq=15 T=19.61 H=90.5 L=3.2 -> InfluxDB 204
+2026-10-13T05:41:06Z [RX-COAP] nodo-coap seq=15 T=19.37 H=88.7 L=2.3 -> InfluxDB 204
+2026-10-13T05:41:19Z [RX-AMQP] nodo-amqp seq=16 T=20.61 H=88.7 L=4.4 -> InfluxDB 204
+2026-10-13T05:41:19Z [RX-MQTT] nodo-mqtt seq=16 T=19.66 H=89.8 L=5.9 -> InfluxDB 204
+2026-10-13T05:41:21Z [RX-COAP] nodo-coap seq=16 T=19.17 H=89.0 L=5.3 -> InfluxDB 204

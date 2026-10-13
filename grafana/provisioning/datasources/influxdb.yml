@@ -1,0 +1,17 @@
+# Grafana solo LEE la TSDB: no participa en la ingesta.
+apiVersion: 1
+datasources:
+  - name: InfluxDB-Ambiental
+    uid: influx-ambiental
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    isDefault: true
+    editable: false
+    jsonData:
+      version: Flux
+      organization: unab
+      defaultBucket: ambiental
+      timeInterval: 15s
+    secureJsonData:
+      token: $INFLUX_TOKEN

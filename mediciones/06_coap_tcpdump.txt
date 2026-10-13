@@ -1,0 +1,7 @@
+# tcpdump -i br-7c14d5083ac8 -n -A udp port 5683   (CoAP: CON POST /telemetria  ->  ACK 2.04 Changed)
+05:42:51.599966 IP 172.18.0.10.56785 > 172.18.0.9.5683: UDP, length 131
+E...[.@.@......
+...	...3..X.B...[18ingestor.telemetria.2.{"nodo":"nodo-coap","seq":22,"ts":1791870171598,"temperature":19.36,"humidity":87.1,"illuminance":6.0}
+05:42:51.609076 IP 172.18.0.9.5683 > 172.18.0.10.56785: UDP, length 6
+E.."..@.@......	...
+.3....XWbD..[1

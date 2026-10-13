@@ -1,0 +1,5 @@
+# mosquitto_sub -v -t unab/ambiental/# (35 s)
+unab/ambiental/nodo-mqtt/estado online
+unab/ambiental/nodo-mqtt/telemetria {"nodo":"nodo-mqtt","seq":18,"ts":1791870109693,"temperature":19.83,"humidity":89.5,"illuminance":1.2}
+unab/ambiental/nodo-mqtt/telemetria {"nodo":"nodo-mqtt","seq":19,"ts":1791870124693,"temperature":19.69,"humidity":89.2,"illuminance":0.7}
+Timed out

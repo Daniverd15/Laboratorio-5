@@ -1,0 +1,184 @@
+# Laboratorio 5 - Plataforma propia UNAB-Ambiental
+#   3 nodos (MQTT, AMQP 0-9-1, CoAP)  ->  ingestor  ->  InfluxDB 2 (TSDB)  ->  Grafana OSS (dashboard + alertas)
+#
+#   cp .env.example .env   # y cambiar las claves
+#   docker compose up -d --build
+#
+# Solo Grafana (3000) queda publicado hacia afuera. Brokers y TSDB escuchan en 127.0.0.1 de la VM
+# (se llega por tunel SSH). Todas las imagenes existen para arm64: el mismo archivo sirve en la Raspberry Pi.
+name: lab5
+
+x-plataforma: &plataforma
+  build: ./plataforma
+  image: lab5-plataforma:1.0
+  restart: unless-stopped
+  mem_limit: 96m
+  environment: &env-plataforma
+    TZ: UTC
+    PERIODO_S: ${PERIODO_S:-15}
+    MQTT_HOST: mosquitto
+    MQTT_USER: ${MQTT_USER}
+    MQTT_PASS: ${MQTT_PASS}
+    AMQP_HOST: rabbitmq
+    AMQP_USER: ${AMQP_USER}
+    AMQP_PASS: ${AMQP_PASS}
+    CONTROL_FILE: /control/forzar.json
+
+services:
+  # ------------------------------------------------------------------ brokers
+  mosquitto:
+    image: eclipse-mosquitto:2.0.20
+    restart: unless-stopped
+    mem_limit: 48m
+    environment:
+      MQTT_USER: ${MQTT_USER}
+      MQTT_PASS: ${MQTT_PASS}
+    # el archivo de claves se genera al arrancar a partir de .env: no hay secretos en el repo
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >
+        touch /mosquitto/data/passwd && chmod 0700 /mosquitto/data/passwd &&
+        mosquitto_passwd -b /mosquitto/data/passwd "$$MQTT_USER" "$$MQTT_PASS" &&
+        chown mosquitto:mosquitto /mosquitto/data/passwd &&
+        exec /docker-entrypoint.sh mosquitto -c /mosquitto/config/mosquitto.conf
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto-data:/mosquitto/data
+    ports:
+      - "${BIND_MQTT:-127.0.0.1}:1883:1883"
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_sub -h localhost -u \"$$MQTT_USER\" -P \"$$MQTT_PASS\" -t '$$SYS/broker/uptime' -C 1 -W 3 >/dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine      # AMQP 0-9-1
+    restart: unless-stopped
+    hostname: rabbit-lab5                        # el nombre del nodo define la carpeta de datos
+    mem_limit: 400m
+    environment:
+      RABBITMQ_DEFAULT_USER: ${AMQP_USER}
+      RABBITMQ_DEFAULT_PASS: ${AMQP_PASS}
+    volumes:
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/conf.d/20-lab5.conf:ro
+      - rabbitmq-data:/var/lib/rabbitmq
+    ports:
+      - "127.0.0.1:5672:5672"
+      - "127.0.0.1:15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  # ------------------------------------------------------------------ TSDB
+  influxdb:
+    image: influxdb:2.7-alpine
+    restart: unless-stopped
+    mem_limit: 400m
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUX_USER}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUX_PASS}
+      DOCKER_INFLUXDB_INIT_ORG: unab
+      DOCKER_INFLUXDB_INIT_BUCKET: ambiental
+      DOCKER_INFLUXDB_INIT_RETENTION: 30d
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_TOKEN}
+      INFLUXD_STORAGE_CACHE_MAX_MEMORY_SIZE: "104857600"
+      INFLUXD_REPORTING_DISABLED: "true"
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      - influxdb-config:/etc/influxdb2
+    ports:
+      - "127.0.0.1:8086:8086"
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  # ------------------------------------------------------------------ ingesta (3 protocolos -> TSDB)
+  ingestor:
+    <<: *plataforma
+    command: ["python", "ingestor.py"]
+    mem_limit: 128m
+    environment:
+      <<: *env-plataforma
+      INFLUX_URL: http://influxdb:8086
+      INFLUX_ORG: unab
+      INFLUX_BUCKET: ambiental
+      INFLUX_TOKEN: ${INFLUX_TOKEN}
+    ports:
+      - "${BIND_COAP:-127.0.0.1}:5683:5683/udp"
+    depends_on:
+      influxdb: {condition: service_healthy}
+      mosquitto: {condition: service_healthy}
+      rabbitmq: {condition: service_healthy}
+
+  # ------------------------------------------------------------------ publicadores (uno por protocolo)
+  nodo-mqtt:
+    <<: *plataforma
+    command: ["python", "pub_mqtt.py"]
+    environment: {<<: *env-plataforma, NODO: nodo-mqtt, OFFSET_TEMP: "0.0"}
+    volumes: ["./control:/control:ro"]
+    depends_on:
+      mosquitto: {condition: service_healthy}
+
+  nodo-amqp:
+    <<: *plataforma
+    command: ["python", "pub_amqp.py"]
+    environment: {<<: *env-plataforma, NODO: nodo-amqp, OFFSET_TEMP: "0.8"}
+    volumes: ["./control:/control:ro"]
+    depends_on:
+      rabbitmq: {condition: service_healthy}
+
+  nodo-coap:
+    <<: *plataforma
+    command: ["python", "pub_coap.py"]
+    environment: {<<: *env-plataforma, NODO: nodo-coap, OFFSET_TEMP: "-0.7", COAP_URI: "coap://ingestor:5683/telemetria"}
+    volumes: ["./control:/control:ro"]
+    depends_on: [ingestor]
+
+  # ------------------------------------------------------------------ visualizacion y alertas (aparte de la ingesta)
+  grafana:
+    image: grafana/grafana-oss:11.6.0
+    restart: unless-stopped
+    mem_limit: 300m
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASS}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"          # lectura sin cuenta: "un companero lee el dashboard sin explicacion"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_USERS_DEFAULT_THEME: light
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/unab-ambiental.json
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES: "false"
+      GF_NEWS_NEWS_FEED_ENABLED: "false"
+      INFLUX_TOKEN: ${INFLUX_TOKEN}
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      influxdb: {condition: service_healthy}
+
+  alertas:
+    <<: *plataforma
+    command: ["python", "webhook.py"]
+    environment: {<<: *env-plataforma, ALERTAS_LOG: /datos/alertas.log}
+    volumes: ["./alertas-log:/datos"]
+    depends_on:
+      mosquitto: {condition: service_healthy}
+
+volumes:
+  mosquitto-data:
+  rabbitmq-data:
+  influxdb-data:
+  influxdb-config:
+  grafana-data:

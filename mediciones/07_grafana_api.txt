@@ -1,0 +1,15 @@
+# GET /api/health
+{"database":"ok","version":"11.6.0","commit":"d2fdff9ee4d75c74bfd3a97c18a0b8e4d029f06e"}
+# GET /api/datasources   (Grafana solo lee la TSDB)
+{'name': 'InfluxDB-Ambiental', 'type': 'influxdb', 'url': 'http://influxdb:8086', 'access': 'proxy', 'isDefault': True, 'readOnly': True} {'defaultBucket': 'ambiental', 'organization': 'unab', 'timeInterval': '15s', 'version': 'Flux'}
+# GET /api/datasources/uid/influx-ambiental/health
+{"message":"datasource is working. 3 buckets found","status":"OK"}
+# GET /api/v1/provisioning/contact-points
+{'name': 'email receiver', 'type': 'email', 'settings': {'addresses': '<example@email.com>'}, 'disableResolveMessage': False, 'provenance': None}
+{'name': 'webhook-plataforma', 'type': 'webhook', 'settings': {'httpMethod': 'POST', 'url': 'http://alertas:8080/grafana'}, 'disableResolveMessage': False, 'provenance': 'file'}
+# GET /api/v1/provisioning/policies
+{'receiver': 'webhook-plataforma', 'group_by': ['alertname', 'nodo'], 'group_wait': '10s', 'group_interval': '1m', 'repeat_interval': '4h'}
+# GET /api/v1/provisioning/alert-rules
+temp-alta | Temperatura alta | for 1m | ventana 120 s | condicion {'params': [32], 'type': 'gt'} | noData OK
+humedad-baja | Humedad baja | for 1m | ventana 120 s | condicion {'params': [35], 'type': 'lt'} | noData OK
+nodo-sin-datos | Nodo sin datos | for 30s | ventana 1800 s | condicion {'params': [90], 'type': 'gt'} | noData Alerting

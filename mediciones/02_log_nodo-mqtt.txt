@@ -1,0 +1,14 @@
+2026-10-13T05:38:04Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=3 T=19.65 H=89.6 L=5.4 -> PUBACK
+2026-10-13T05:38:19Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=4 T=19.69 H=90.1 L=1.5 -> PUBACK
+2026-10-13T05:38:34Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=5 T=19.69 H=89.0 L=0.5 -> PUBACK
+2026-10-13T05:38:49Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=6 T=19.70 H=88.9 L=1.8 -> PUBACK
+2026-10-13T05:39:04Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=7 T=19.88 H=89.8 L=1.7 -> PUBACK
+2026-10-13T05:39:19Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=8 T=19.82 H=87.7 L=2.9 -> PUBACK
+2026-10-13T05:39:34Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=9 T=19.72 H=89.3 L=3.4 -> PUBACK
+2026-10-13T05:39:49Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=10 T=19.67 H=89.3 L=3.3 -> PUBACK
+2026-10-13T05:40:04Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=11 T=19.73 H=88.6 L=2.8 -> PUBACK
+2026-10-13T05:40:19Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=12 T=19.65 H=90.6 L=0.9 -> PUBACK
+2026-10-13T05:40:34Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=13 T=19.76 H=89.2 L=5.7 -> PUBACK
+2026-10-13T05:40:49Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=14 T=19.58 H=91.5 L=1.8 -> PUBACK
+2026-10-13T05:41:04Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=15 T=19.61 H=90.5 L=3.2 -> PUBACK
+2026-10-13T05:41:19Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=16 T=19.66 H=89.8 L=5.9 -> PUBACK

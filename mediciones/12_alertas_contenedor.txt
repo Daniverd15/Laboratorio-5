@@ -1,0 +1,5 @@
+2026-10-13T05:37:35Z [ALERTA] webhook escuchando en :8080/grafana -> /datos/alertas.log + MQTT unab/ambiental/alertas/#
+2026-10-13T05:45:56Z [ALERTA] FIRING | Temperatura alta | nodo=nodo-mqtt | valores={'B': 41, 'C': 1} | Temperatura alta en nodo-mqtt: 41.0 °C (umbral 32 °C)
+2026-10-13T05:49:56Z [ALERTA] RESOLVED | Temperatura alta | nodo=nodo-mqtt | valores={'B': 25.069999999999997, 'C': 0} | Temperatura alta en nodo-mqtt: 25.1 °C (umbral 32 °C)
+2026-10-13T05:52:53Z [ALERTA] FIRING | Nodo sin datos | nodo=nodo-amqp | valores={'B': 128.808966703, 'C': 1} | nodo-amqp lleva 129 s sin escribir en la TSDB (se espera un dato cada 15 s)
+2026-10-13T05:54:53Z [ALERTA] RESOLVED | Nodo sin datos | nodo=nodo-amqp | valores={'B': 8.694921776, 'C': 0} | nodo-amqp lleva 9 s sin escribir en la TSDB (se espera un dato cada 15 s)

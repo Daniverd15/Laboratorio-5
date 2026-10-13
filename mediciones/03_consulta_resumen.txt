@@ -1,0 +1,42 @@
+Result: 2_inicio_de_la_toma
+Table: keys: []
+             primer_punto:time             nodo:string
+------------------------------  ----------------------
+2026-10-13T05:35:20.029000000Z               nodo-amqp
+2026-10-13T05:35:48.330000000Z               nodo-coap
+2026-10-13T05:35:49.322000000Z               nodo-mqtt
+Result: 3_fin_de_la_toma
+Table: keys: []
+             ultimo_punto:time             nodo:string
+------------------------------  ----------------------
+2026-10-13T05:42:34.526000000Z               nodo-amqp
+2026-10-13T05:42:36.598000000Z               nodo-coap
+2026-10-13T05:42:34.693000000Z               nodo-mqtt
+Result: 4_minimo
+Table: keys: []
+                _value:float           _field:string
+----------------------------  ----------------------
+                        87.2                humidity
+                         0.5             illuminance
+                       19.17             temperature
+Result: 5_media
+Table: keys: []
+         _field:string                  _value:float
+----------------------  ----------------------------
+              humidity             88.92558139534881
+           illuminance             2.927906976744186
+           temperature            19.944069767441864
+Result: 6_maximo
+Table: keys: []
+                _value:float           _field:string
+----------------------------  ----------------------
+                        91.5                humidity
+                         5.9             illuminance
+                       20.84             temperature
+Result: 1_puntos_por_nodo
+Table: keys: []
+           nodo:string        protocolo:string                  puntos:int
+----------------------  ----------------------  --------------------------
+             nodo-amqp                    amqp                          30
+             nodo-coap                    coap                          28
+             nodo-mqtt                    mqtt                          28

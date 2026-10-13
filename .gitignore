@@ -1,0 +1,6 @@
+.env
+control/
+alertas-log/
+__pycache__/
+*.pyc
+~$*

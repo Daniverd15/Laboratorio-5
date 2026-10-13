@@ -1,0 +1,14 @@
+2026-10-13T05:38:06Z [TX] CON POST /telemetria seq=3 T=19.34 H=89.0 L=4.7 -> ACK 2.04 Changed
+2026-10-13T05:38:21Z [TX] CON POST /telemetria seq=4 T=19.20 H=88.5 L=2.5 -> ACK 2.04 Changed
+2026-10-13T05:38:36Z [TX] CON POST /telemetria seq=5 T=19.24 H=88.3 L=5.0 -> ACK 2.04 Changed
+2026-10-13T05:38:51Z [TX] CON POST /telemetria seq=6 T=19.48 H=88.3 L=3.4 -> ACK 2.04 Changed
+2026-10-13T05:39:06Z [TX] CON POST /telemetria seq=7 T=19.46 H=87.3 L=0.9 -> ACK 2.04 Changed
+2026-10-13T05:39:21Z [TX] CON POST /telemetria seq=8 T=19.35 H=88.8 L=3.6 -> ACK 2.04 Changed
+2026-10-13T05:39:36Z [TX] CON POST /telemetria seq=9 T=19.59 H=88.0 L=5.3 -> ACK 2.04 Changed
+2026-10-13T05:39:51Z [TX] CON POST /telemetria seq=10 T=19.38 H=88.6 L=0.5 -> ACK 2.04 Changed
+2026-10-13T05:40:06Z [TX] CON POST /telemetria seq=11 T=19.41 H=89.7 L=5.3 -> ACK 2.04 Changed
+2026-10-13T05:40:21Z [TX] CON POST /telemetria seq=12 T=19.30 H=88.1 L=0.5 -> ACK 2.04 Changed
+2026-10-13T05:40:36Z [TX] CON POST /telemetria seq=13 T=19.48 H=88.2 L=5.9 -> ACK 2.04 Changed
+2026-10-13T05:40:51Z [TX] CON POST /telemetria seq=14 T=19.30 H=88.0 L=0.7 -> ACK 2.04 Changed
+2026-10-13T05:41:06Z [TX] CON POST /telemetria seq=15 T=19.37 H=88.7 L=2.3 -> ACK 2.04 Changed
+2026-10-13T05:41:21Z [TX] CON POST /telemetria seq=16 T=19.17 H=89.0 L=5.3 -> ACK 2.04 Changed

@@ -1,0 +1,37 @@
+2026-10-13T05:55:05Z [PRUEBA] docker compose stop ingestor (60 s): los datos deben esperar en Mosquitto, RabbitMQ y en el nodo CoAP
+# cola de RabbitMQ con el ingestor detenido:
+name	messages_ready	consumers
+telemetria.tsdb	4	0
+# nodo-coap sin servidor:
+2026-10-13T05:55:41Z [COAP] sin ACK (ResolutionError: Name resolution error: No address information found for requests to 'ingestor'); 2 muestra(s) en cola para reenviar
+2026-10-13T05:55:56Z [COAP] sin ACK (ResolutionError: Name resolution error: No address information found for requests to 'ingestor'); 3 muestra(s) en cola para reenviar
+2026-10-13T05:56:18Z [PRUEBA] docker compose start ingestor
+# ingestor al volver (reentrega de lo acumulado, con la marca de tiempo original):
+2026-10-13T05:56:19Z [MQTT] CONNACK Success; SUBSCRIBE unab/ambiental/+/telemetria qos1 (sesion persistente)
+2026-10-13T05:56:19Z [COAP] servidor escuchando en udp/5683: POST /telemetria, GET /estado
+2026-10-13T05:56:19Z [AMQP] consumiendo cola durable 'telemetria.tsdb' (exchange unab.ambiental, rk telemetria.#, prefetch 20)
+2026-10-13T05:56:19Z [RX-MQTT] nodo-mqtt seq=72 T=19.4 H=91.7 L=3.2 -> InfluxDB 204
+2026-10-13T05:56:19Z [RX-MQTT] nodo-mqtt seq=73 T=19.48 H=90.6 L=2.7 -> InfluxDB 204
+2026-10-13T05:56:19Z [RX-AMQP] nodo-amqp seq=7 T=20.59 H=88.9 L=4.4 -> InfluxDB 204
+2026-10-13T05:56:19Z [RX-MQTT] nodo-mqtt seq=74 T=19.32 H=90.0 L=4.7 -> InfluxDB 204
+2026-10-13T05:56:19Z [RX-AMQP] nodo-amqp seq=8 T=20.52 H=90.1 L=2.8 -> InfluxDB 204
+2026-10-13T05:56:19Z [RX-MQTT] nodo-mqtt seq=75 T=19.5 H=90.3 L=1.5 -> InfluxDB 204
+2026-10-13T05:56:19Z [RX-AMQP] nodo-amqp seq=9 T=20.61 H=89.0 L=1.7 -> InfluxDB 204
+2026-10-13T05:56:19Z [RX-AMQP] nodo-amqp seq=10 T=20.61 H=88.7 L=5.7 -> InfluxDB 204
+2026-10-13T05:56:19Z [RX-AMQP] nodo-amqp seq=11 T=20.52 H=90.6 L=1.1 -> InfluxDB 204
+2026-10-13T05:56:19Z [RX-MQTT] nodo-mqtt seq=76 T=19.35 H=92.5 L=2.4 -> InfluxDB 204
+2026-10-13T05:56:21Z [RX-COAP] nodo-coap seq=72 T=19.28 H=89.9 L=2.2 -> InfluxDB 204
+2026-10-13T05:56:21Z [RX-COAP] nodo-coap seq=73 T=19.21 H=88.6 L=5.8 -> InfluxDB 204
+2026-10-13T05:56:21Z [RX-COAP] nodo-coap seq=74 T=19.1 H=89.2 L=1.1 -> InfluxDB 204
+2026-10-13T05:56:21Z [RX-COAP] nodo-coap seq=75 T=19.14 H=88.5 L=3.7 -> InfluxDB 204
+2026-10-13T05:56:21Z [RX-COAP] nodo-coap seq=76 T=19.1 H=89.9 L=5.4 -> InfluxDB 204
+2026-10-13T05:56:34Z [RX-AMQP] nodo-amqp seq=12 T=20.48 H=90.2 L=0.9 -> InfluxDB 204
+2026-10-13T05:56:34Z [RX-MQTT] nodo-mqtt seq=77 T=19.37 H=92.4 L=5.9 -> InfluxDB 204
+2026-10-13T05:56:36Z [RX-COAP] nodo-coap seq=77 T=19.02 H=90.2 L=5.9 -> InfluxDB 204
+2026-10-13T05:56:49Z [RX-AMQP] nodo-amqp seq=13 T=20.48 H=90.4 L=5.4 -> InfluxDB 204
+# huecos > 30 s en la TSDB despues de la prueba:
+Result: _result
+Table: keys: []
+           nodo:string              hueco_termina:time      segundos_sin_datos:int
+----------------------  ------------------------------  --------------------------
+             nodo-amqp  2026-10-13T05:53:49.636000000Z                         195

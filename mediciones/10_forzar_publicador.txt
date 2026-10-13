@@ -1,0 +1,5 @@
+2026-10-13T05:43:12Z FORZANDO temperature=41 en nodo-mqtt durante 300s (hasta 05:48:12Z)
+2026-10-13T05:43:19Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=24 T=41.00 H=88.7 L=5.2 FORZADO -> PUBACK
+2026-10-13T05:43:34Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=25 T=41.00 H=89.7 L=2.6 FORZADO -> PUBACK
+2026-10-13T05:43:49Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=26 T=41.00 H=91.4 L=2.8 FORZADO -> PUBACK
+2026-10-13T05:48:04Z [TX] PUBLISH qos1 unab/ambiental/nodo-mqtt/telemetria seq=43 T=41.00 H=90.9 L=2.7 FORZADO -> PUBACK

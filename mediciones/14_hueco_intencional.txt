@@ -1,0 +1,10 @@
+2026-10-13T05:50:33Z [PRUEBA] docker compose stop nodo-amqp (hueco intencional de ~4 min)
+2026-10-13T05:52:57Z [PRUEBA] webhook recibio FIRING
+2026-10-13T05:53:49Z [PRUEBA] docker compose start nodo-amqp
+2026-10-13T05:52:53Z [ALERTA] FIRING | Nodo sin datos | nodo=nodo-amqp | valores={'B': 128.808966703, 'C': 1} | nodo-amqp lleva 129 s sin escribir en la TSDB (se espera un dato cada 15 s)
+2026-10-13T05:54:53Z [ALERTA] RESOLVED | Nodo sin datos | nodo=nodo-amqp | valores={'B': 8.694921776, 'C': 0} | nodo-amqp lleva 9 s sin escribir en la TSDB (se espera un dato cada 15 s)
+Result: _result
+Table: keys: []
+           nodo:string              hueco_termina:time      segundos_sin_datos:int
+----------------------  ------------------------------  --------------------------
+             nodo-amqp  2026-10-13T05:53:49.636000000Z                         195

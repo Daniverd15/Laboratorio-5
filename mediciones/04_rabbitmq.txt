@@ -1,0 +1,13 @@
+# rabbitmqctl list_exchanges / list_queues / list_bindings / list_connections
+name	type	durable
+unab.ambiental	topic	true
+
+name	durable	messages_ready	messages_unacknowledged	consumers
+telemetria.tsdb	true	0	0	1
+
+source_name	destination_name	routing_key
+unab.ambiental	telemetria.tsdb	telemetria.#
+
+user	protocol	client_properties	state
+ambiental	{0,9,1}	[{"product","Pika Python Client Library"},{"platform","Python 3.12.15"},{"capabilities",[{"authentication_failure_close",true},{"basic.nack",true},{"connection.blocked",true},{"consumer_cancel_notify",true},{"publisher_confirms",true}]},{"information","See http://pika.rtfd.org"},{"version","1.3.2"},{"connection_name","nodo-amqp"}]	running
+ambiental	{0,9,1}	[{"product","Pika Python Client Library"},{"platform","Python 3.12.15"},{"capabilities",[{"authentication_failure_close",true},{"basic.nack",true},{"connection.blocked",true},{"consumer_cancel_notify",true},{"publisher_confirms",true}]},{"information","See http://pika.rtfd.org"},{"version","1.3.2"},{"connection_name","ingestor"}]	running

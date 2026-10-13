@@ -1,0 +1,154 @@
+# Alertas de Grafana (Unified Alerting) aprovisionadas desde archivo: quedan versionadas en el repo.
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: umbrales-ambiental
+    folder: Alertas UNAB-Ambiental
+    interval: 30s                       # cada cuanto se evalua el grupo
+    rules:
+      # ---------------------------------------------------------------- regla principal del laboratorio
+      - uid: temp-alta
+        title: Temperatura alta
+        condition: C
+        data:
+          - refId: A                    # ventana: ultimos 2 minutos, por nodo
+            relativeTimeRange: {from: 120, to: 0}
+            datasourceUid: influx-ambiental
+            model:
+              refId: A
+              intervalMs: 15000
+              maxDataPoints: 500
+              query: |
+                from(bucket: "ambiental")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r._measurement == "telemetria" and r._field == "temperature")
+                  |> keep(columns: ["_time", "_value", "nodo", "protocolo"])
+          - refId: B                    # reduccion: promedio de la ventana
+            datasourceUid: __expr__
+            model:
+              refId: B
+              type: reduce
+              expression: A
+              reducer: mean
+              settings: {mode: dropNN}
+          - refId: C                    # condicion: promedio > 32 degC
+            datasourceUid: __expr__
+            model:
+              refId: C
+              type: threshold
+              expression: B
+              conditions:
+                - evaluator: {type: gt, params: [32]}
+        for: 1m                         # debe sostenerse 1 minuto (evita disparos por un pico suelto)
+        noDataState: OK
+        execErrState: Error
+        labels:
+          severidad: critica
+          regla_id: temp-alta
+        annotations:
+          summary: 'Temperatura alta en {{ $labels.nodo }}: {{ printf "%.1f" $values.B.Value }} °C (umbral 32 °C)'
+          description: 'Promedio de 2 minutos por encima de 32 °C durante al menos 1 minuto. Protocolo del nodo: {{ $labels.protocolo }}.'
+          __dashboardUid__: unab-ambiental
+          __panelId__: "10"
+
+      # ---------------------------------------------------------------- segunda regla de umbral
+      - uid: humedad-baja
+        title: Humedad baja
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange: {from: 120, to: 0}
+            datasourceUid: influx-ambiental
+            model:
+              refId: A
+              intervalMs: 15000
+              maxDataPoints: 500
+              query: |
+                from(bucket: "ambiental")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r._measurement == "telemetria" and r._field == "humidity")
+                  |> keep(columns: ["_time", "_value", "nodo", "protocolo"])
+          - refId: B
+            datasourceUid: __expr__
+            model: {refId: B, type: reduce, expression: A, reducer: mean, settings: {mode: dropNN}}
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              refId: C
+              type: threshold
+              expression: B
+              conditions:
+                - evaluator: {type: lt, params: [35]}
+        for: 1m
+        noDataState: OK
+        execErrState: Error
+        labels:
+          severidad: aviso
+          regla_id: humedad-baja
+        annotations:
+          summary: 'Humedad baja en {{ $labels.nodo }}: {{ printf "%.1f" $values.B.Value }} % (umbral 35 %)'
+          description: 'Promedio de 2 minutos por debajo de 35 %HR durante al menos 1 minuto.'
+          __dashboardUid__: unab-ambiental
+          __panelId__: "11"
+
+      # ---------------------------------------------------------------- vigilancia de la toma de 4 dias
+      - uid: nodo-sin-datos
+        title: Nodo sin datos
+        condition: C
+        data:
+          - refId: A                    # segundos desde el ultimo punto de cada nodo (mira 30 min atras)
+            relativeTimeRange: {from: 1800, to: 0}
+            datasourceUid: influx-ambiental
+            model:
+              refId: A
+              intervalMs: 15000
+              maxDataPoints: 500
+              query: |
+                from(bucket: "ambiental")
+                  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+                  |> filter(fn: (r) => r._measurement == "telemetria" and r._field == "temperature")
+                  |> last()
+                  |> map(fn: (r) => ({_time: r._time, nodo: r.nodo, protocolo: r.protocolo,
+                       _value: float(v: uint(v: now()) - uint(v: r._time)) / 1000000000.0}))
+          - refId: B
+            datasourceUid: __expr__
+            model: {refId: B, type: reduce, expression: A, reducer: last, settings: {mode: dropNN}}
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              refId: C
+              type: threshold
+              expression: B
+              conditions:
+                - evaluator: {type: gt, params: [90]}
+        for: 30s
+        noDataState: Alerting           # si ningun nodo escribio en 30 min tambien es alarma
+        execErrState: Error
+        labels:
+          severidad: aviso
+          regla_id: nodo-sin-datos
+        annotations:
+          summary: '{{ $labels.nodo }} lleva {{ printf "%.0f" $values.B.Value }} s sin escribir en la TSDB (se espera un dato cada 15 s)'
+          description: 'Hueco en la toma de datos. Revisar el publicador y su broker ({{ $labels.protocolo }}).'
+          __dashboardUid__: unab-ambiental
+          __panelId__: "20"
+
+contactPoints:
+  - orgId: 1
+    name: webhook-plataforma
+    receivers:
+      - uid: cp-webhook-plataforma
+        type: webhook
+        disableResolveMessage: false    # tambien avisa cuando la alerta se resuelve
+        settings:
+          url: http://alertas:8080/grafana
+          httpMethod: POST
+
+policies:
+  - orgId: 1
+    receiver: webhook-plataforma
+    group_by: ['alertname', 'nodo']
+    group_wait: 10s
+    group_interval: 1m
+    repeat_interval: 4h
