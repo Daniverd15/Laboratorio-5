@@ -151,10 +151,12 @@ fin del forzado 00:48:12 → **Normal 00:49:16** → webhook *resolved* 00:49:56
 | | |
 |---|---|
 | Inicio | **2026-10-13 00:35:20** (hora de Bogotá, UTC−5) |
-| Fin previsto | 2026-10-17 00:35 (4 días = 23 040 muestras por nodo a una cada 15 s) |
-| Huecos | ver `mediciones/20_resumen_toma.txt` (se regenera con `scripts/resumen_toma.py`) |
+| Ventana de 4 días entregada | **13-oct 00:35 → 17-oct 00:35** (≈ 23 040 muestras por nodo) — `evidencias/20-dashboard-toma.png` |
+| Fin real de la toma | **2026-10-19 11:34:21**, cuando se detuvieron los publicadores (6,46 días continuos) |
+| Puntos | nodo-mqtt 37 195 (100 %) · nodo-coap 37 195 (100 %) · nodo-amqp 37 185 (99,97 %) |
+| Huecos | **uno solo**, el provocado (abajo) — `mediciones/20_resumen_toma.txt` |
 
-Huecos conocidos al inicio de la toma:
+Huecos de la toma:
 
 - **Provocado:** `nodo-amqp`, 00:50:34 → 00:53:49 del 13-oct (195 s). Se detuvo el publicador a propósito para comprobar que la regla
   *Nodo sin datos* lo detecta y que el panel *Muestras por minuto* lo muestra ([evidencia](evidencias/15-hueco-nodo-sin-datos-firing.png)).
@@ -208,4 +210,5 @@ basta con dejar un solo publicador (por ejemplo `nodo-mqtt`) leyendo el sensor r
 | `13-alerta-dashboard-resuelta.png` | el mismo dashboard tras resolverse |
 | `16-alerta-disparo-log.png` | forzado en el publicador, cambios de estado, webhook y MQTT |
 | `15-hueco-nodo-sin-datos-firing.png`, `17-hueco-y-resiliencia.png` | hueco provocado y detectado; caída del ingestor sin pérdida |
-| `20-dashboard-toma.png` | **dashboard con la ventana de la toma** (se actualiza al completar los 4 días) |
+| `20-dashboard-toma.png` | **dashboard con la ventana de 4 días** (13→17 oct) |
+| `21-dashboard-ventana-4d.png` | últimos 4 días al detener la toma (19 oct) |
