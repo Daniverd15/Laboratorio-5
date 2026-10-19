@@ -277,7 +277,8 @@ for k in sorted(n):
 tabla(filas, [2.0, 1.8, 3.4, 2.8, 3.4, 2.4, 2.8], tam=7)
 ini, fin = TOMA["inicio_bogota"], TOMA["fin_bogota"]
 if COMPLETA:
-    estado = "**Toma completa:** inicio **%s**, fin **%s** (hora de Bogotá) = **%.2f días**." % (ini, fin, TOMA["duracion_dias"])
+    estado = ("**Toma completa:** inicio **%s**, fin **%s** (hora de Bogotá; ahí se detuvieron los publicadores) = **%.2f días** continuos. "
+              "La ventana de 4 días que se entrega es **13-oct 00:35 → 17-oct 00:35** (Fig. 2); la toma siguió corriendo hasta el fin indicado." % (ini, fin, TOMA["duracion_dias"]))
 else:
     estado = ("**Inicio: %s** (hora de Bogotá). **Fin previsto: 2026-10-17 00:35.** **Fecha de corte de este informe: %s** (%.2f h de toma); "
               "la toma sigue corriendo en la VM y la captura de la ventana completa se adjunta al entregar." % (ini, fin, TOMA["duracion_h"]))
@@ -307,11 +308,11 @@ titulo("6. Evidencia (capturas y logs reales de la VM; el resto está en /eviden
 t = doc.add_table(rows=1, cols=1)
 sin_bordes(t)
 if COMPLETA:
-    pie2 = "**Fig. 2.** Dashboard de Grafana con la **ventana completa de 4 días** de la toma (3 nodos, 3 variables, umbrales en rojo)."
+    pie2 = "**Fig. 2.** Dashboard de Grafana con la **ventana de 4 días** (13-oct 00:35 → 17-oct 00:35): ciclo día/noche de las 3 variables en los 3 nodos, umbrales en rojo y el pico forzado de la alerta el primer día."
 else:
     pie2 = ("**Fig. 2.** Dashboard de Grafana con la toma desde su inicio hasta la fecha de corte: *gauges* con unidad y rango, series de las 3 variables con el umbral, "
             "y el pico forzado de 41 °C con las marcas Pending (amarillo), Firing (rojo) y Normal (verde).")
-imagen(t.cell(0, 0), recorte("20-dashboard-toma.png", (0, 0, 1700, 1120)), 15.0, pie2, tam_pie=7)
+imagen(t.cell(0, 0), recorte("20-dashboard-toma.png", (0, 440, 1700, 1440)), 15.0, pie2, tam_pie=7)
 cuadricula([
     ("10-alerta-dashboard-firing.png", "**Fig. 3.** Alerta **disparada**: gauge de `nodo-mqtt` en 41 °C y serie sobre el umbral (corazón roto = Firing).", (0, 215, 1700, 690)),
     ("14-alerta-historial-estados.png", "**Fig. 4.** Historial de la regla en Grafana: Pending → Alerting → Normal, con el valor evaluado (B = promedio).", (320, 60, 1480, 610)),

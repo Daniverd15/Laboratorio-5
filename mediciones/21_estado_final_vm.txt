@@ -1,0 +1,12 @@
+SERVICE     STATUS
+alertas     Up 6 days
+grafana     Up 6 days
+influxdb    Up 6 days (healthy)
+ingestor    Up 6 days
+mosquitto   Up 6 days (healthy)
+rabbitmq    Up 6 days (healthy)
+ 16:35:11 up 6 days, 11:09,  0 users,  load average: 0.30, 0.13, 0.08
+               total        used        free      shared  buff/cache   available
+Mem:             891         460          70           7         360         274
+Swap:           2047         428        1619
+/dev/root        29G  7.1G   22G  25% /
